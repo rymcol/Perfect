@@ -257,7 +257,14 @@ public class WebResponse {
 		// if this is not a chunked request and there is not already an existing Content-Length header, add it
 		if !self.chunkedStarted && !foundContentLength {
 			connection.writeHeader(line: "Content-Length: \(bodyData.count)")
-		}		
+		}
+        
+        // write our server type to the header
+        #if os(Linux)
+            connection.writeHeader(line: "Server: Perfect/Ubuntu")
+        #else
+            connection.writeHeader(line: "Server: Perfect/macOS")
+        #endif
 		
 		// cookies
 		if self.cookiesArray.count > 0 {
